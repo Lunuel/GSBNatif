@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le :  mar. 23 oct. 2018 à 18:44
+-- Généré le :  mer. 24 oct. 2018 à 12:52
 -- Version du serveur :  5.7.17
 -- Version de PHP :  7.1.3
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données :  `gsbv2`
+-- Base de données :  `gsb_frais`
 --
 
 -- --------------------------------------------------------
@@ -30,8 +30,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `etat` (
   `id` int(4) NOT NULL,
-  `libelle` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `libelle` varchar(30) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Déchargement des données de la table `etat`
@@ -55,19 +55,9 @@ CREATE TABLE `fichefrais` (
   `nbJustificatifs` int(11) DEFAULT NULL,
   `montantValide` decimal(10,2) DEFAULT NULL,
   `dateModif` date DEFAULT NULL,
-  `idEtat` int(4) DEFAULT '2',
+  `idEtat` int(4) DEFAULT '3',
   `idVisiteur` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Déchargement des données de la table `fichefrais`
---
-
-INSERT INTO `fichefrais` (`idFicheFrais`, `mois`, `nbJustificatifs`, `montantValide`, `dateModif`, `idEtat`, `idVisiteur`) VALUES
-(4, '201809', NULL, '837.44', '2018-09-30', 4, 28),
-(5, '201810', NULL, NULL, '2018-10-04', 2, 28),
-(6, '201810', NULL, '784.10', '2018-10-04', 4, 1),
-(7, '201810', NULL, '551.00', '2018-10-04', 4, 4);
 
 -- --------------------------------------------------------
 
@@ -77,9 +67,9 @@ INSERT INTO `fichefrais` (`idFicheFrais`, `mois`, `nbJustificatifs`, `montantVal
 
 CREATE TABLE `fraisforfait` (
   `id` int(4) NOT NULL,
-  `libelle` char(20) DEFAULT NULL,
+  `libelle` char(20) COLLATE utf8_bin DEFAULT NULL,
   `montant` decimal(5,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Déchargement des données de la table `fraisforfait`
@@ -103,28 +93,6 @@ CREATE TABLE `lignefraisforfait` (
   `quantite` int(2) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Déchargement des données de la table `lignefraisforfait`
---
-
-INSERT INTO `lignefraisforfait` (`idFicheFrais`, `idFraisForfait`, `quantite`) VALUES
-(4, 1, 5),
-(4, 2, 12),
-(4, 3, 1),
-(4, 4, 8),
-(5, 1, 4),
-(5, 2, 5),
-(5, 3, 1),
-(5, 4, 2),
-(6, 1, 4),
-(6, 2, 5),
-(6, 3, 2),
-(6, 4, 5),
-(7, 1, 1),
-(7, 2, 0),
-(7, 3, 4),
-(7, 4, 2);
-
 -- --------------------------------------------------------
 
 --
@@ -136,23 +104,10 @@ CREATE TABLE `lignefraishorsforfait` (
   `libelle` varchar(100) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `montant` decimal(10,2) DEFAULT NULL,
-  `idFicheFrais` int(4) NOT NULL,
-  `valide` tinyint(1) DEFAULT '1'
+  `invalider` tinyint(1) DEFAULT '0',
+  `reporter` tinyint(1) DEFAULT '0',
+  `idFicheFrais` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Déchargement des données de la table `lignefraishorsforfait`
---
-
-INSERT INTO `lignefraishorsforfait` (`id`, `libelle`, `date`, `montant`, `idFicheFrais`, `valide`) VALUES
-(19, 'REFUSE Vacances Espagne', '2018-12-01', '20.00', 4, 0),
-(20, 'REFUSE Restaurant chinois', '2018-09-01', '20.00', 4, 0),
-(21, 'REFUSE RDV Important', '2018-07-05', '4000.00', 4, 0),
-(23, 'Vacances Espagne', '2018-12-01', '55.00', 5, 1),
-(24, 'RDV Important', '2018-09-01', '56.00', 6, 1),
-(25, 'REFUSE Vacances Espagne', '2018-09-04', '300.00', 6, 0),
-(26, 'Restaurant chinois', '2018-09-08', '26.00', 7, 1),
-(27, 'RDV Important', '2018-07-05', '45.00', 7, 1);
 
 -- --------------------------------------------------------
 
@@ -162,8 +117,8 @@ INSERT INTO `lignefraishorsforfait` (`id`, `libelle`, `date`, `montant`, `idFich
 
 CREATE TABLE `typevisiteur` (
   `id` int(4) NOT NULL,
-  `libelle` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `libelle` varchar(30) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Déchargement des données de la table `typevisiteur`
@@ -171,9 +126,7 @@ CREATE TABLE `typevisiteur` (
 
 INSERT INTO `typevisiteur` (`id`, `libelle`) VALUES
 (1, 'Visiteur'),
-(2, 'Comptable'),
-(3, 'Visiteur'),
-(4, 'Comptable');
+(2, 'Comptable');
 
 -- --------------------------------------------------------
 
@@ -183,16 +136,16 @@ INSERT INTO `typevisiteur` (`id`, `libelle`) VALUES
 
 CREATE TABLE `visiteur` (
   `id` int(4) NOT NULL,
-  `nom` char(30) DEFAULT NULL,
-  `prenom` char(30) DEFAULT NULL,
-  `login` char(20) DEFAULT NULL,
-  `mdp` char(20) DEFAULT NULL,
-  `adresse` char(30) DEFAULT NULL,
-  `cp` char(5) DEFAULT NULL,
-  `ville` char(30) DEFAULT NULL,
+  `nom` char(30) COLLATE utf8_bin DEFAULT NULL,
+  `prenom` char(30) COLLATE utf8_bin DEFAULT NULL,
+  `login` char(20) COLLATE utf8_bin DEFAULT NULL,
+  `mdp` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `adresse` char(30) COLLATE utf8_bin DEFAULT NULL,
+  `cp` char(5) COLLATE utf8_bin DEFAULT NULL,
+  `ville` char(45) COLLATE utf8_bin DEFAULT NULL,
   `dateEmbauche` date DEFAULT NULL,
   `idTypeVisiteur` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Déchargement des données de la table `visiteur`
@@ -307,7 +260,7 @@ ALTER TABLE `typevisiteur`
 --
 ALTER TABLE `visiteur`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idTypeVisiteur` (`idTypeVisiteur`);
+  ADD KEY `fk_visiteur_typeVisiteur` (`idTypeVisiteur`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -322,7 +275,7 @@ ALTER TABLE `etat`
 -- AUTO_INCREMENT pour la table `fichefrais`
 --
 ALTER TABLE `fichefrais`
-  MODIFY `idFicheFrais` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idFicheFrais` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `fraisforfait`
 --
@@ -332,17 +285,17 @@ ALTER TABLE `fraisforfait`
 -- AUTO_INCREMENT pour la table `lignefraishorsforfait`
 --
 ALTER TABLE `lignefraishorsforfait`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `typevisiteur`
 --
 ALTER TABLE `typevisiteur`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT pour la table `visiteur`
 --
 ALTER TABLE `visiteur`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- Contraintes pour les tables déchargées
 --
@@ -371,7 +324,7 @@ ALTER TABLE `lignefraishorsforfait`
 -- Contraintes pour la table `visiteur`
 --
 ALTER TABLE `visiteur`
-  ADD CONSTRAINT `visiteur_ibfk_1` FOREIGN KEY (`idTypeVisiteur`) REFERENCES `typevisiteur` (`id`);
+  ADD CONSTRAINT `fk_visiteur_typeVisiteur` FOREIGN KEY (`idTypeVisiteur`) REFERENCES `typevisiteur` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
