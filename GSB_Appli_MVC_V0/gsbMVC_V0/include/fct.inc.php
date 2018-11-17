@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /** 
  * Fonctions pour l'application GSB
  
@@ -6,12 +6,18 @@
  * @author Cheri Bibi
  * @version    1.0
  */
+
+
  /**
  * Teste si un quelconque visiteur est connecté
  * @return vrai ou faux 
  */
 function estConnecte(){
-  return isset($_SESSION['idVisiteur']);
+	if (isset($_SESSION['idVisiteur'])) {
+		return true;
+	}
+	else return false;
+
 }
 /**
  * Enregistre dans une variable session les infos d'un visiteur
@@ -181,7 +187,8 @@ function valideInfosFrais($dateFrais,$libelle,$montant){
  * @param $msg : le libellé de l'erreur 
  */
 function ajouterErreur($msg){
-   if (! isset($_REQUEST['erreurs'])){
+   if (!isset($_REQUEST[
+   	'erreurs'])){
       $_REQUEST['erreurs']=array();
 	} 
    $_REQUEST['erreurs'][]=$msg;
